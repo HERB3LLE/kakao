@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title></title>
-
 <style>
 * {
   box-sizing: border-box;
@@ -18,53 +17,245 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: #000;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-#screen {
+#lock {
   position: fixed;
+  inset: 0;
+  overflow: hidden;
+  color: white;
+}
+
+#bg {
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
-#tapArea {
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.16),
+    transparent 35%,
+    transparent 75%,
+    rgba(0,0,0,.08)
+  );
+  pointer-events: none;
+}
+
+.status {
+  position: absolute;
+  top: max(44px, calc(env(safe-area-inset-top) + 12px));
+  left: 13.5%;
+  right: 9%;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px #333;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bars {
+  height: 23px;
+  display: flex;
+  align-items: end;
+  gap: 3px;
+}
+
+.bars i {
+  width: 4px;
+  border-radius: 3px;
+  background: white;
+}
+
+.bars i:nth-child(1) { height: 8px; }
+.bars i:nth-child(2) { height: 12px; }
+.bars i:nth-child(3) { height: 17px; }
+.bars i:nth-child(4) { height: 22px; }
+
+.date {
+  position: absolute;
+  top: 9.65%;
+  width: 100%;
+  text-align: center;
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -.6px;
+  text-shadow: 0 1px 4px #555;
+}
+
+.clock {
+  position: absolute;
+  top: 12.6%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(105px, 24vw, 165px);
+  line-height: 1.05;
+  letter-spacing: -7px;
+  font-weight: 300;
+  color: rgba(240,238,230,.86);
+  -webkit-text-stroke: 1px rgba(255,255,255,.38);
+  text-shadow:
+    0 2px 2px rgba(0,0,0,.5),
+    0 -1px 1px rgba(255,255,255,.4);
+}
+
+.controls {
+  position: absolute;
+  left: 11.5%;
+  right: 11.5%;
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + 49px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(35,35,35,.48);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: inset 0 0 1px rgba(255,255,255,.25);
+  backdrop-filter: blur(12px);
+}
+
+.circle svg {
+  width: 34px;
+  height: 34px;
+}
+
+.camera {
+  background: rgba(255,255,255,.68);
+}
+
+.homebar {
+  position: absolute;
+  left: 50%;
+  bottom: max(9px, calc(env(safe-area-inset-bottom) + 5px));
+  transform: translateX(-50%);
+  width: 135px;
+  height: 5px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+#tap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  touch-action: manipulation;
+}
+
+#second {
   position: fixed;
   inset: 0;
-  z-index: 2;
-  touch-action: manipulation;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+  background: #000;
 }
 </style>
 </head>
 
 <body>
-<img id="screen" src="3011B76C-C4E4-46FE-A859-D61A7E3FFC5B.jpeg" alt="">
-<div id="tapArea"></div>
+<div id="lock">
+  <img id="bg"
+    src="3011B76C-C4E4-46FE-A859-D61A7E3FFC5B.jpeg" alt="">
+  <div class="overlay"></div>
+
+  <div class="status">
+    <span style="display:flex;align-items:center;gap:8px">
+      KT
+      <svg width="23" height="23" viewBox="0 0 24 24"
+           fill="white">
+        <path d="M3 2 2 3l4 4v9a3 3 0 0 0 3 3h3l3 3 1-1-16-16z"/>
+        <path d="M9 3h6l3 4v9l-2 2-2-2h-2l-2-2V7z"/>
+        <path d="M19 4a8 8 0 0 1 0 12l-1-1a6 6 0 0 0 0-10z"/>
+      </svg>
+    </span>
+
+    <div class="status-right">
+      <div class="bars"><i></i><i></i><i></i><i></i></div>
+      <svg width="30" height="23" viewBox="0 0 30 23"
+           fill="none" stroke="white" stroke-width="3.5"
+           stroke-linecap="round">
+        <path d="M2 7Q15 -3 28 7"/>
+        <path d="M7 12Q15 5 23 12"/>
+        <path d="M12 17Q15 14 18 17"/>
+      </svg>
+      <svg width="49" height="25" viewBox="0 0 49 25">
+        <rect x="1" y="2" width="42" height="21" rx="5"
+          fill="white" fill-opacity=".9"/>
+        <rect x="4" y="5" width="28" height="15" rx="2"
+          fill="#aaa"/>
+        <path d="M45 8v9q3-1 3-4.5T45 8" fill="white"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="date">Fri Oct 30</div>
+  <div class="clock">08:08</div>
+
+  <div class="controls">
+    <div class="circle">
+      <svg viewBox="0 0 32 32" fill="white">
+        <path d="M12 3h8l2 5H10z"/>
+        <rect x="9" y="8" width="14" height="21" rx="3"/>
+        <path d="m16 11-4 9h4l-1 6 5-10h-4z"
+          fill="#555"/>
+      </svg>
+    </div>
+
+    <div class="circle camera">
+      <svg viewBox="0 0 32 32" fill="white">
+        <path d="M5 9h6l2-3h7l2 3h5v17H5z"/>
+        <circle cx="16" cy="17" r="6" fill="#ccc"/>
+        <circle cx="16" cy="17" r="4" fill="white"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="homebar"></div>
+  <div id="tap"></div>
+</div>
+
+<img id="second" src="photo-output.jpeg" alt="">
 
 <script>
-const screen = document.getElementById("screen");
-const tapArea = document.getElementById("tapArea");
-
+const lock = document.getElementById("lock");
+const second = document.getElementById("second");
 let changed = false;
 
-const secondPhoto = new Image();
-secondPhoto.src = "photo-output.jpeg";
+const preload = new Image();
+preload.src = "photo-output.jpeg";
 
-function changePhoto() {
+document.getElementById("tap").addEventListener("click", () => {
   if (changed) return;
   changed = true;
-  screen.src = secondPhoto.src;
-}
-
-tapArea.addEventListener("click", changePhoto);
-tapArea.addEventListener("touchend", function(e) {
-  e.preventDefault();
-  changePhoto();
-}, { passive: false });
+  second.style.display = "block";
+  lock.style.display = "none";
+});
 </script>
 </body>
 </html>
