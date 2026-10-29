@@ -68,11 +68,11 @@ html, body {
 .status-right {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .status-right svg {
-  transform: scale(.82);
+  transform: scale(.72);
   transform-origin: center;
 }
 
@@ -81,6 +81,8 @@ html, body {
   display: flex;
   align-items: end;
   gap: 2px;
+  transform: scale(.85);
+  transform-origin: center;
 }
 
 .bars i {
@@ -94,7 +96,7 @@ html, body {
 .bars i:nth-child(3) { height: 14px; }
 .bars i:nth-child(4) { height: 18px; }
 
-/* 날짜 */
+/* 날짜: 기존 설정 그대로 */
 .date {
   position: absolute;
   top: 9.65%;
@@ -109,7 +111,7 @@ html, body {
   text-shadow: 0 1px 3px rgba(0,0,0,.3);
 }
 
-/* 시간 */
+/* 시간: 조금 더 두껍고 불투명하게 */
 .clock {
   position: absolute;
   top: 12.6%;
@@ -120,12 +122,12 @@ html, body {
   font-size: clamp(105px, 24vw, 165px);
   line-height: 1.05;
   letter-spacing: -7px;
-  font-weight: 300;
-  color: rgba(240,238,230,.86);
-  -webkit-text-stroke: 1px rgba(255,255,255,.38);
+  font-weight: 350;
+  color: rgba(240,238,230,.96);
+  -webkit-text-stroke: 1.2px rgba(255,255,255,.5);
   text-shadow:
-    0 2px 2px rgba(0,0,0,.5),
-    0 -1px 1px rgba(255,255,255,.4);
+    0 2px 2px rgba(0,0,0,.4),
+    0 -1px 1px rgba(255,255,255,.35);
 }
 
 /* 하단 버튼 */
@@ -206,8 +208,7 @@ html, body {
   <div class="status">
     <span style="display:flex;align-items:center;gap:5px">
       KT
-      <svg width="19" height="19" viewBox="0 0 24 24"
-           fill="white">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="white">
         <path d="M3 2 2 3l4 4v9a3 3 0 0 0 3 3h3l3 3 1-1L3 2z"/>
         <path d="M9 3h6l3 4v9l-2 2-2-2h-2l-2-2V7z"/>
       </svg>
@@ -244,8 +245,7 @@ html, body {
       <svg viewBox="0 0 32 32" fill="white">
         <path d="M12 3h8l2 5H10z"/>
         <rect x="9" y="8" width="14" height="21" rx="3"/>
-        <path d="m16 11-4 9h4l-1 6 5-10h-4z"
-              fill="#555"/>
+        <path d="m16 11-4 9h4l-1 6 5-10h-4z" fill="#555"/>
       </svg>
     </div>
 
@@ -271,12 +271,13 @@ const tap = document.getElementById("tap");
 
 let changed = false;
 
-// 두 번째 사진을 미리 불러와 빠르게 표시
+// 두 번째 사진 미리 불러오기
 const preload = new Image();
 preload.src = "photo-output.jpeg";
 
 function reveal() {
   if (changed) return;
+
   changed = true;
   second.style.display = "block";
   lock.style.display = "none";
